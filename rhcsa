@@ -1,0 +1,25 @@
+echo "test" > file.txt
+> replaces exisiting file
+>> appends to file
+| chains command eg cat /etc/passwd | grep root
+
+2> redirects std error to a file
+2>> redirects and appends std error to a file
+/dev/null empty space directory
+2>&1 redirects std error to std output
+< accept input from a file, eg mysql < filedump.sql
+
+less -ls
+head show top 10 lines of a file
+tail show last 10 lines of a file
+
+/proc/{PID}/status
+cat /proc/2/status
+S Sleeping
+
+tar -czvf helloworld.tar.gz file1 file2   #creates and compresses tar
+tar -xzvf helloworld.tar.gz #extracts files
+gzip file1 compresses file1 into file1.gz
+gzip -d file1.gz  - > decompresses file1.gz
+gunzip filename also decompreses
+
