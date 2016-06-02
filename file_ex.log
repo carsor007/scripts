@@ -1,0 +1,6 @@
+INFO:root:checking to see if the backup.zip exists
+INFO:root:creating backup.zip
+INFO:root:adding test.txt to backup.zip
+INFO:root:checking to see if the backup.zip exists
+INFO:root:It exists!
+INFO:root:adding test.txt to backup.zip

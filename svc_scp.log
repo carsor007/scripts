@@ -1,0 +1,56 @@
+2016-03-09 00:48:45,906 - INFO: Checking if processhttpd is running
+2016-03-09 00:48:45,943 - WARNING: Processhttpd is not running
+2016-03-09 00:48:45,944 - INFO: Attempting to restart: httpd
+2016-03-09 00:48:45,961 - ERROR: Unable to restart httpd please check the logs
+2016-03-09 00:51:12,707 - INFO: Checking if processhttpd is running
+2016-03-09 00:51:12,744 - WARNING: Processhttpd is not running
+2016-03-09 00:51:12,745 - INFO: Attempting to restart: httpd
+2016-03-09 00:51:36,921 - INFO: Checking if processhttpd is running
+2016-03-09 00:51:36,944 - WARNING: Processhttpd is not running
+2016-03-09 00:51:36,944 - INFO: Attempting to restart: httpd
+2016-03-09 00:53:38,863 - INFO: Checking if processhttpd is running
+2016-03-09 00:53:38,883 - WARNING: Processhttpd is not running
+2016-03-09 00:53:38,884 - INFO: Attempting to restart: httpd
+2016-03-09 01:00:00,885 - INFO: Checking if processhttpd is running
+2016-03-09 01:00:00,908 - WARNING: Processhttpd is not running
+2016-03-09 01:00:00,909 - INFO: Attempting to restart: httpd
+2016-03-09 01:00:00,927 - ERROR: Unable to restart httpd please check the logs
+2016-03-09 01:00:52,651 - INFO: Checking if processhttpd is running
+2016-03-09 01:00:52,689 - WARNING: Processhttpd is not running
+2016-03-09 01:00:52,689 - INFO: Attempting to restart: httpd
+2016-03-09 01:00:52,704 - ERROR: Unable to restart httpd please check the logs
+2016-03-09 01:03:59,571 - INFO: Checking if processhttpd is running
+2016-03-09 01:03:59,600 - WARNING: Processhttpd is not running
+2016-03-09 01:03:59,601 - INFO: Attempting to restart: httpd
+2016-03-09 01:03:59,619 - ERROR: Unable to restart httpd please check the logs
+2016-03-09 01:05:15,173 - INFO: Checking if processhttpd is running
+2016-03-09 01:05:15,194 - WARNING: Processhttpd is not running
+2016-03-09 01:05:15,195 - INFO: Attempting to restart: httpd
+2016-03-09 01:05:46,969 - INFO: Checking if processhttpd is running
+2016-03-09 01:05:46,990 - WARNING: Processhttpd is not running
+2016-03-09 01:05:46,990 - INFO: Attempting to restart: httpd
+2016-03-09 01:05:47,009 - ERROR: Unable to restart httpd please check the logs
+2016-03-09 01:06:18,966 - INFO: Checking if processhttpd is running
+2016-03-09 01:06:18,983 - WARNING: Processhttpd is not running
+2016-03-09 01:06:18,983 - INFO: Attempting to restart: httpd
+2016-03-09 01:06:18,998 - ERROR: Unable to restart httpd please check the logs
+2016-03-09 01:08:00,246 - INFO: Checking if processhttpd is running
+2016-03-09 01:08:00,268 - WARNING: Processhttpd is not running
+2016-03-09 01:08:00,269 - INFO: Attempting to restart: httpd
+2016-03-09 01:08:00,282 - ERROR: Unable to restart httpd please check the logs
+2016-03-09 01:08:42,140 - INFO: Checking if processhttpd is running
+2016-03-09 01:08:42,162 - WARNING: Processhttpd is not running
+2016-03-09 01:08:42,162 - INFO: Attempting to restart: httpd
+2016-03-09 01:09:03,832 - INFO: Checking if processhttpd is running
+2016-03-09 01:09:03,855 - WARNING: Processhttpd is not running
+2016-03-09 01:09:03,856 - INFO: Attempting to restart: httpd
+2016-03-09 01:12:06,650 - INFO: Checking if processhttpd is running
+2016-03-09 01:12:06,689 - WARNING: Processhttpd is not running
+2016-03-09 01:12:06,690 - INFO: Attempting to restart: httpd
+2016-03-09 01:12:06,707 - ERROR: Unable to restart httpd please check the logs
+2016-03-09 01:13:16,868 - INFO: Checking if processmongod is running
+2016-03-09 01:13:16,894 - INFO: mongod is currently running
+2016-03-09 01:13:34,571 - INFO: Checking if processnetwork is running
+2016-03-09 01:13:34,595 - WARNING: Processnetwork is not running
+2016-03-09 01:13:34,596 - INFO: Attempting to restart: network
+2016-03-09 01:13:36,056 - INFO: network successfully restarted
