@@ -1,0 +1,36 @@
+list all open files by all process
+$ lsof
+
+list all process which has opened a file
+$ lsof /home/user/file
+
+find opened files by a user
+$ lsof -u username
+$ lsof -u user1, user2, user3
+$ lsof -u user1 -u user2
+
+list opened files by a particular command
+$ lsof -c java
+$ lsof -c httpd
+$ lsof -c java -c httpd
+
+find all files opened by a particular user and command
+$ lsof -u root -c java
+
+find files opened by USER and process
+$ lsof -a -u root - c java
+
+lsof with negottian operator--similar to AND and OR operator
+$ lsof - u ^root   #will list all files opened by all users except root
+
+list all open files by a process using PID
+$ lsof -p 17783
+$ lsof -p 17783, 17754, 17984
+
+list all network connection
+$ lsof -i
+$ lsof -i tcp
+$ lsof -i udp
+
+find which process is using a port
+$ lsof -i :19500
