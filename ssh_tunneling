@@ -1,0 +1,14 @@
+ssh -f -L 2222:remotehost:22 localhost -N
+
+N dont execute command on local host
+-f forward
+-L local port
+
+ssh-keygen
+ssh-cpy-id localhost
+ssh localhost
+ssh -p 2222 user@localhost
+
+what I've done is connected to port 2222 on localhost but its actually being forwarded to remote host
+
+ssh -f -L 3000:remote:3128 localhost -N
