@@ -1,0 +1,121 @@
+Internet Protocol (IP) or Network Address:
+
+An IP (Internet Protocol) address is a unique identifier for a node or host connection on an IP network. An IP address is a 32 bit binary number usually represented as 4 decimal values, each representing 8 bits, in the range 0 to 255 (known as octets) separated by decimal points. This is known as "dotted decimal" notation. 
+Summary:
+
+4 bytes long
+Network Part
+Logical network to which the address refers
+Host Part
+the machine on that network
+Examples
+192.168.28.10
+65.209.34.209
+10.1.1.1
+172.148.35.40
+It is sometimes useful to view the values in their binary form.
+140 .179 .220 .200
+10001100.10110011.11011100.11001000
+Every IP address consists of two parts, one identifying the network and one identifying the node. The Class of the address and the subnet mask determine which part belongs to the network address and which part belongs to the node address.
+
+There are 5 different address classes. You can determine which class any IP address is in by examining the first 4 bits of the IP address. 
+Class A addresses begin with 0xxx, or 1 to 126 decimal. 
+Class B addresses begin with 10xx, or 128 to 191 decimal. 
+Class C addresses begin with 110x, or 192 to 223 decimal. 
+Class D addresses begin with 1110, or 224 to 239 decimal. 
+Class E addresses begin with 1111, or 240 to 254 decimal. 
+Addresses beginning with 01111111, or 127 decimal, are reserved for loopback and for internal testing on a local machine. [You can test this: you should always be able to ping 127.0.0.1, which points to yourself] Class D addresses are reserved for multicasting. Class E addresses are reserved for future use. They should not be used for host addresses.
+
+Now we can see how the Class determines, by default, which part of the IP address belongs to the network (N) and which part belongs to the node (n).
+
+Class A -- NNNNNNNN.nnnnnnnn.nnnnnnn.nnnnnnn 
+Class B -- NNNNNNNN.NNNNNNNN.nnnnnnnn.nnnnnnnn 
+Class C -- NNNNNNNN.NNNNNNNN.NNNNNNNN.nnnnnnnn
+
+In the example, 140.179.220.200 is a Class B address so by default the Network part of the address (also known as the Network Address) is defined by the first two octets (140.179.x.x) and the node part is defined by the last 2 octets (x.x.220.200).
+
+In order to specify the network address for a given IP address, the node section is set to all "0"s. In our example, 140.179.0.0 specifies the network address for 140.179.220.200. When the node section is set to all "1"s, it specifies a broadcast that is sent to all hosts on the network. 140.179.255.255 specifies the example broadcast address. Note that this is true regardless of the length of the node section.
+
+Private Subnets
+There are three IP network addresses reserved for private networks. The addresses are 10.0.0.0/8, 172.16.0.0/12, and 192.168.0.0/16. They can be used by anyone setting up internal IP networks, such as a lab or home LAN behind a NAT or proxy server or a router. It is always safe to use these because routers on the Internet will never forward packets coming from these addresses. These addresses are defined in RFC 1918.
+
+Subnetting:
+
+Subnetting an IP Network can be done for a variety of reasons, including organization, use of different physical media (such as Ethernet, FDDI, WAN, etc.), preservation of address space, and security. The most common reason is to control network traffic. In an Ethernet network, all nodes on a segment see all the packets transmitted by all the other nodes on that segment. Performance can be adversely affected under heavy traffic loads, due to collisions and the resulting retransmissions. A router is used to connect IP networks to minimize the amount of traffic each segment must receive. 
+Subnet Masking
+Applying a subnet mask to an IP address allows you to identify the network and node parts of the address. The network bits are represented by the 1s in the mask, and the node bits are represented by the 0s. Performing a bitwise logical AND operation between the IP address and the subnet mask results in the Network Address or Number. 
+For example, using our test IP address and the default Class B subnet mask, we get:
+
+10001100.10110011.11110000.11001000 140.179.240.200 Class B IP Address
+11111111.11111111.00000000.00000000 255.255.000.000 Default Class B Subnet Mask
+--------------------------------------------------------
+10001100.10110011.00000000.00000000 140.179.000.000 Network Address
+
+Default subnet masks:
+
+Class A - 255.0.0.0 - 11111111.00000000.00000000.00000000 
+Class B - 255.255.0.0 - 11111111.11111111.00000000.00000000 
+Class C - 255.255.255.0 - 11111111.11111111.11111111.00000000 
+Additional bits can be added to the default subnet mask for a given Class to further subnet, or break down, a network. When a bitwise logical AND operation is performed between the subnet mask and IP address, the result defines the Subnet Address (also called the Network Address or Network Number). There are some restrictions on the subnet address. Node addresses of all "0"s and all "1"s are reserved for specifying the local network (when a host does not know it's network address) and all hosts on the network (broadcast address), respectively. This also applies to subnets. A subnet address cannot be all "0"s or all "1"s. This also implies that a 1 bit subnet mask is not allowed. This restriction is required because older standards enforced this restriction. Recent standards that allow use of these subnets have superceded these standards, but many "legacy" devices do not support the newer standards. If you are operating in a controlled environment, such as a lab, you can safely use these restricted subnets. 
+To calculate the number of subnets or nodes, use the formula (2^n - 2) where n = number of bits in either field. Multiplying the number of subnets by the number of nodes available per subnet gives you the total number of nodes available for your class and subnet mask. Also, note that although subnet masks with non-contiguous mask bits are allowed, they are not recommended.
+
+Example:
+
+10001100.10110011.11011100.11001000 140.179.220.200 IP Address
+11111111.11111111.11100000.00000000 255.255.224.000 Subnet Mask
+--------------------------------------------------------
+10001100.10110011.11000000.00000000 140.179.192.000 Subnet Address
+10001100.10110011.11011111.11111111 140.179.223.255 Broadcast Address
+
+In this example a 3 bit subnet mask was used. There are 6 subnets available with this size mask (remember that subnets with all 0's and all 1's are not allowed). Each subnet has 8190 nodes. Each subnet can have nodes assigned to any address between the Subnet address and the Broadcast address. This gives a total of 49,140 nodes for the entire class B address subnetted this way. Notice that this is less than the 65,534 nodes an unsubnetted class B address would have.
+
+You can calculate the Subnet Address by performing a bitwise logical AND operation between the IP address and the subnet mask, then setting all the host bits to 0s. Similarly, you can calculate the Broadcast Address for a subnet by performing the same logical AND between the IP address and the subnet mask, then setting all the host bits to 1s. That is how these numbers are derived in the example above.
+
+Subnetting always reduces the number of possible nodes for a given network.
+
+Class A Subnets
+# bits  Subnet Mask CIDR    # Subnets   # Hosts Nets * Hosts
+2   255.192.0.0 /10 2   4194302 8388604
+3   255.224.0.0 /11 6   2097150 12582900
+4   255.240.0.0 /12 14  1048574 14680036
+5   255.248.0.0 /13 30  524286  15728580
+6   255.252.0.0 /14 62  262142  16252804
+7   255.254.0.0 /15 126 131070  16514820
+8   255.255.0.0 /16 254 65534   16645636
+9   255.255.128.0   /17 510 32766   16710660
+10  255.255.192.0   /18 1022    16382   16742404
+11  255.255.224.0   /19 2046    8190    16756740
+12  255.255.240.0   /20 4094    4094    16760836
+13  255.255.248.0   /21 8190    2046    16756740
+14  255.255.252.0   /22 16382   1022    16742404
+15  255.255.254.0   /23 32766   510 16710660
+16  255.255.255.0   /24 65534   254 16645636
+17  255.255.255.128 /25 131070  126 16514820
+18  255.255.255.192 /26 262142  62  16252804
+19  255.255.255.224 /27 524286  30  15728580
+20  255.255.255.240 /28 1048574 14  14680036
+21  255.255.255.248 /29 2097150 6   12582900
+22  255.255.255.252 /30 4194302 2   8388604
+Class B Subnets
+ 
+# bits  Subnet Mask CIDR    # Subnets   # Hosts Nets * Hosts
+2   255.255.192.0   /18 2   16382   32764
+3   255.255.224.0   /19 6   8190    49140
+4   255.255.240.0   /20 14  4094    57316
+5   255.255.248.0   /21 30  2046    61380
+6   255.255.252.0   /22 62  1022    63364
+7   255.255.254.0   /23 126 510 64260
+8   255.255.255.0   /24 254 254 64516
+9   255.255.255.128 /25 510 126 64260
+10  255.255.255.192 /26 1022    62  63364
+11  255.255.255.224 /27 2046    30  61380
+12  255.255.255.240 /28 4094    14  57316
+13  255.255.255.248 /29 8190    6   49140
+14  255.255.255.252 /30 16382   2   32764
+  Class C Subnets
+# bits  Subnet Mask CIDR    # Subnets   # Hosts Nets * Hosts
+2   255.255.255.192 /26 2   62  124
+3   255.255.255.224 /27 6   30  180
+4   255.255.255.240 /28 14  14  196
+5   255.255.255.248 /29 30  6   180
+6   255.255.255.252 /30 62  2   124

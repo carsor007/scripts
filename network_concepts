@@ -1,0 +1,44 @@
+Networking in UNIX is fairly simple and straightforward. UNIX networking is based on the TCP/IP suite of protocols, which is also the main protocol of the internet, making it the logical choice for a system to connect to the internet.
+
+Starting TCP/IP is fairly simple on most systems, by using the "ifconfig" (interace configuration) command. The format for the ifconfig is usually
+
+config <device> <address>
+
+Example from a solaris machine displaying it's configuration:
+: ifconfig -a
+lo0: flags=1000849<UP,LOOPBACK,RUNNING,MULTICAST,IPv4> mtu 8232 index 1
+inet 127.0.0.1 netmask ff000000 
+hme0: flags=1000843<UP,BROADCAST,RUNNING,MULTICAST,IPv4> mtu 1500 index 2
+inet 192.168.28.76 netmask ffffff00 broadcast 192.168.28.255
+ether 8:0:20:f8:e7:86 
+
+Look at the second line:
+
+The interface name is hme0
+it has an ip address of 192.168.28.76
+it is on network 192.168.28.0/24
+the subnet mask is 255.255.255.0
+This machine will listen on the interface hme0 and will only process requests for network 192.168.28.0/24.
+
+We can tell that this is a class C address, by the network number.
+
+For this network ip address and subnetmaks the network is: 192.168.28.0 and the broadcast address for the network is 192.168.28.255
+
+Reminder on a network, you loose the first address as the network name and the last address as the broadcase address.
+
+Running the command,
+
+netstat -rn
+
+# -r show routes
+# -n don't resolve the network addresses to names
+
+Routing Table: IPv4
+Destination Gateway Flags Ref Use Interface
+-------------------- -------------------- ----- ----- ------ ---------
+192.168.28.0 192.168.28.76 U 1 25557 hme0
+224.0.0.0 192.168.28.76 U 1 0 hme0
+default 192.168.28.1 UG 1 1396 
+127.0.0.1 127.0.0.1 UH 3 118 lo0
+
+You can see from this the network name and the default network.
