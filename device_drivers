@@ -1,0 +1,84 @@
+Device Drivers Overview
+Each type of device must have a driver installed in the kernel which knows how to handle that device. For instance, to use a SCSI disk, you must have a SCSI disk driver installed.
+
+Within the UNIX system name space, files and devices look similar. For example, the commands cat /dev/tty00 and cat myfile both produce a stream of output. However, there is a difference between these two commands; their apparent equivalence is the result of some intricate work on the part of the operating system.
+
+A device file is a special type of file. Rather than pointing to an inode which points to some data blocks, a device file points to an inode that contains some associated information: a major device number (which defines the type of device it is connected to), and a minor device number (which identifies a particular device of that type). When you carry out a file operation on a device file, the system uses the major number to determine which device driver to use to read data from or write data to the device. (The minor number is used internally by the device driver.)
+
+Device files are created with mknod(1M) and cannot be manipulated like ordinary files, although you can rename them or create links to them.
+
+Device files are typically kept in the directory /dev. They include identifiers that can be used to read from and write to kernel memory (/dev/kmem), hard disk drives (in ``raw'' or ``block'' mode, for example /dev/rdsk/0s0 raw access to drive unit 0), and all the terminals, floppy disk drives, tape drives, and other components of the computer. Block devices write through the cache, providing fast, high level access. Raw device files bypass the buffer cache but are more flexible. Raw devices are therefore sometimes used by special applications like databases, which maintain their own high performance cache for the hardware they use for data storage.
+
+This has some useful applications. You can send messages to a terminal by redirecting the output of a cat(1) command to that terminal's device file. Alternatively, you can mount a filesystem on a subdirectory of your root filesystem, transparently adding another disk drive to the system. All you need do is create an empty subdirectory, then issue the mount command with the device file that refers to the additional filesystem as one of the parameters. The new filesystem is then invisibly attached to the root filesystem at the mount point you created.
+
+Links between files are simply filenames that share the same inode. Inodes are only unique within a given filesystem. It is therefore impossible for a normal link to cross a filesystem boundary. However, a symbolic link can be used instead. A symbolic link is created using the -s flag to ln(1) instead of pointing to the inode of the file, the symbolic link points to a short file containing a reference to the filesystem and inode of the linked file.
+
+While device files may seem somewhat obscure, they are one of the most important features of the operating system because they allow you to extend it.
+
+
+Writing Linux Device Drivers
+
+One of the early design advantages of UNIX subsequently copied by other operating systems, such as MS-DOS, was the manner in which UNIX treats devices. UNIX essentially abstracts devices out of the kernel proper and deals with them as files through code called device drivers. The device drivers needed for a particular system are then linked back into the kernel, either dynamically in some UNIX implementations or statically at kernel build time. Due to the fact that device drivers need to deal with complex, low-level hardware issues such as interrupts and synchronization, device driver code was traditionally written by highly experienced C programmers who worked for organizations that had access to UNIX source code. Thus, the ability to write a UNIX device driver was once considered a measure of a UNIX programmer's guru-hood.
+
+However, things have changed. Since the rise of Linux many more people have the opportunity to play with the source code of an inexpensive version of Unix. A primary benefit of Linux has been, and hopefully will continue to be, the availability of the source code. The source code provides numerous examples of how to write your own device driver for that gizmo you bought at your local surplus store.
+
+For the kernel to handle all of these different devices, a generic driver interface is available. All device drivers must conform to this generic interface to be able to work. This interface enables a process to open and close a device, read data from it, write data to it, query its status, and set special operating conditions. Not all of these functions need to be implemented for any given device - sometimes the nature of the device excludes one or more of these functions.
+
+Generally speaking, a device driver can be considered a dedicated piece of software that will translate the device-specific interface into a generic interface that can be used by the Unix kernel and various applications. Figure 1 should make this a bit more clear.
+
+One important thing to remember is that a device driver usually operates on a group of similar devices, such as SCSI tape drives, not on one particular brand and model of that device. The serial ports of a PC are another example. Normally, there are two or more of these ports available. Linux has only one device driver for the serial port, and that driver can distinguish for which of the available ports it is currently working. How the device driver makes this distinction is one of the topics I will discuss in the following paragraphs.
+
+Block and Character Devices
+
+I mentioned the generic kernel interface for device drivers previously. Note, however, that there are so many different devices available that not all can used by the same interface. Therefore, the devices have been divided into two groups:
+
+
+block devices
+character devices
+This division is based on how a device processes its data, either as a block (usually 512 bytes in length) or as a stream of bytes, one character at a time.
+
+An example of a block device is a hard disk. Although the data comes out of, or goes into, the disk itself as a stream of bytes, for the computer these data are transferred in blocks (i.e., of 512 bytes). This last feature is accomplished by using a technique called DMA (Direct Memory Access). This means that the CPU is not involved directly in transferring the data, but the disk controller itself stores the blocks of data in, or reads them directly from the memory. After the transfer has been completed, the disk controller will interrupt the CPU to indicate this completion. Therefore, it is called a block-based device.
+
+Normally, these block transfers are used with high-speed devices that need to transfer large amounts of data. In this way, all of these transfers can be done with a minimum of overhead and CPU utilization.
+
+All other devices that do not transfer data in blocks are called character devices. These devices often have a much lower transfer rate than the block devices, and they typically do not support DMA. However, they tend to use interrupts more frequently than do block devices. Under normal circumstances, a character device will interrupt the CPU for each byte of data is has prepared or needs. Therefore a character device tends to generate more CPU overhead than a block device. This is just a rule of thumb, there are, of course, exceptions.
+
+If you want to know which of your devices is a block device and which is a character device, you can call up a directory listing of the /dev directory. An example is shown below.
+
+brw-rw---- 1 root disk 3, 0 Sep 7 1994 hda
+brw-rw---- 1 root disk 3, 1 Sep 7 1994 hda1
+brw-rw---- 1 root disk 3, 10 Sep 7 1994 hda10
+brw-rw---- 1 root disk 3, 11 Sep 7 1994 hda11
+brw-rw---- 1 root disk 3, 12 Sep 7 1994 hda12
+brw-rw---- 1 root disk 3, 13 Sep 7 1994 hda13
+brw-rw---- 1 root disk 3, 14 Sep 7 1994 hda14
+brw-rw---- 1 root disk 3, 15 Sep 7 1994 hda15
+brw-rw---- 1 root disk 3, 16 Aug 2 22:05 hda16
+crw-rw---- 1 root daemon 6, 0 Jan 1 1980 lp0 crw-rw---- 1 root daemon 6, 1 Jan 1 1980 lp1 crw-rw---- 1 root daemon 6, 2 Jan 1 1980 lp2
+
+This is the output of an ls -l command in the /dev directory. If you look at the protection bits of each special device file, you will see either a b or a c. A b means a block device (in this case, the first (E)IDE hard disk, /dev/hda, and a number of partitions on this hard disk), and a c means a character device (in this example, a number of parallel printer ports).
+
+Major and Minor Device Numbers
+
+The numbers in the center columns of the listing (e.g., 3, 0 and 6, 0) represent major and minor device numbers. As mentioned in one of the previous paragraphs, a device driver normally controls all similar devices in one computer. The question is, how does the kernel know which type of device driver to use? The kernel does that by looking at the major number of the device when it is opened. This major number is the first number of the number pair that you see when you do an ls -l in the /dev directory. In the previous example, these major numbers would be 3 for the hda device and 6 for the lp device. By means of this number, the kernel can distinguish the different general types of devices and use the appropriate driver.
+
+The second number of these pairs is called the minor number. This number is used to distinguish the different instances of devices within the same class. You can see this if you look at the serial devices in your computer:
+
+crw-r--r-- 1 root root 4, 64 Jan 1 1980 ttyS0
+crw-r--r-- 1 root root 4, 65 May 29 1995 ttyS1
+crw-r--r-- 1 root root 4, 66 Jan 1 1980 ttyS2
+crw-r--r-- 1 root root 4, 67 Jan 1 1980 ttyS3
+All of these devices have major number 4, which in Linux means a dial-in serial port. Within this same group, the different serial ports each have their own minor number. In this case, ttyS0 (which is COM1: in DOS-speak) has minor number 64.
+
+Loadable or Static?
+
+One of the features of Linux (and several other Unix implementations) is "loadable modules." In a classic Unix kernel, all devices must be configured into the kernel. Once that has been done, the kernel can be relinked and all specified devices are included in the standalone kernel program. In such a system, all device code is always present in memory, whether you actually need it or not.
+
+To save on the memory footprint of the kernel, Linux uses the concept of loadable modules. These are special object files that can be added to the kernel at runtime. When they are no longer needed, they can be unloaded to free the occupied memory. In this way, the kernel normally uses less memory than when all device drivers are statically linked. Another advantage is that when a new device is added to the computer only the new module needs to be loaded without recompiling the complete kernel.
+
+When you are a device driver developer, loadable modules have an advantage too. You do not need to relink the kernel each time you change your device driver code. This can save you valuable time. However, do not think that by using a loadable module you will prevent your system from hanging when your driver code fails.
+
+Those who would like to learn more about the internals of a Unix kernel should read Maurice J. Bach's book, The Design of the UNIX Operating System.
+
+Writing a device driver is still not a trivial task. It requires an in-depth understanding of both the hardware involved and the internals of Linux. However, one advantage to Linux is that a large number of drivers are available in source form in the kernel tree. This can serve as a very good starting point for your own device driver.
+
